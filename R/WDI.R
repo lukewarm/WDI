@@ -71,7 +71,9 @@ WDI <- function(country = "all", indicator = "NY.GNS.ICTR.GN.ZS", start = 2005, 
 wdi.dl = function(indicator, country, start, end){
     daturl = paste("http://api.worldbank.org/countries/", country, "/indicators/", indicator,
                     "?date=",start,":",end, "&per_page=25000", "&format=json", sep = "")
-    dat = RJSONIO::fromJSON(daturl, nullValue=NA)[[2]]
+    tmpfilename = paste0(c('/tmp/R_WDI_', sample(letters, 24, replace = TRUE), ".json"), collapse = '') 
+    download.file(daturl, destfile = tmpfilename)
+    dat = RJSONIO::fromJSON(tmpfilename, nullValue=NA)[[2]]
     dat = lapply(dat, function(j) cbind(j$country[[1]], j$country[[2]], j$value, j$date))
     dat = data.frame(do.call('rbind', dat))
     for(i in 1:4){
