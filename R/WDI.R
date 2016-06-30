@@ -72,7 +72,7 @@ wdi.dl = function(indicator, country, start, end){
     daturl = paste("http://api.worldbank.org/countries/", country, "/indicators/", indicator,
                     "?date=",start,":",end, "&per_page=25000", "&format=json", sep = "")
     tmpfilename = paste0(c('/tmp/R_WDI_', sample(letters, 24, replace = TRUE), ".json"), collapse = '') 
-    download.file(daturl, destfile = tmpfilename)
+    download.file(daturl, destfile = tmpfilename, quiet = TRUE)
     dat = RJSONIO::fromJSON(tmpfilename, nullValue=NA)[[2]]
     dat = lapply(dat, function(j) cbind(j$country[[1]], j$country[[2]], j$value, j$date))
     dat = data.frame(do.call('rbind', dat))
